@@ -4,10 +4,16 @@
 # case from a list;
 from random import choice
 
+# sys.exit() is used to manually terminate execution of a program, in this
+# case we will use it if a player enters invalid input, e.g. "Godzilla";
+from sys import exit
+
+
 # Throughout this program, I use many print() statements to enhance legibility
 # in the terminal, e.g. below;
 print()
-print("This is Rock-Paper-Scissors! You will be playing against the computer. Please enter your selection now...")
+print("This is Rock-Paper-Scissors! You will be playing against the\n" 
+        "computer. Please enter your selection now...")
 print()
 
 # We use lower() to control for human error in the input, e.g. "ROCK";
@@ -16,42 +22,58 @@ print()
 
 objects = ["rock","paper","scissors"]
 
+# Check to make sure no invalid input was entered, if it was then terminate
+# the program with sys.exit();
+if human not in objects:
+    print("This is invalid input, the game will now terminate. Please run\n"
+            "the program from the beginning if you'd like to play again.")
+    print()
+    exit()
+
+# We use random.choice() to randomly assign an element from objects to the
+# computer;
 computer = choice(objects).lower()
 
 print(f"You chose {human}, and the computer chooses {computer}.")
 print()
 
-if human in objects:
 
-    if human == "rock" and computer == "paper":
-        print("Paper covers rock, therefore you lose!")
-        print()
+# Create a dictionary that will contain all possible winning combinations,
+# from the human's perspective; ergo the keys are the human's choice, and the 
+# subkeys are the computer's choice; if a particular combination is not found 
+# in this dictionary, it means the human lost that round;
+win_combos = {
+        
+        'rock': {'scissors': "Rock smashes scissors"},
 
-    elif human == "rock" and computer == "scissors":
-        print("Rock breaks scissors, therefore you win!")
-        print()
+        'paper': {'rock': "Paper covers rock"},
 
-    elif human == "paper" and computer == "scissors":
-        print("Scissors cut paper, therefore you lose!")
-        print()
+        'scissors': {'paper': "Scissors cut paper"}
 
-    elif human == "paper" and computer == "rock":
-        print("Paper covers rock, therefore you win!")
-        print()
+}
 
-    elif human == "scissors" and computer == "rock":
-        print("Rock breaks scissors, therefore you lose!")
-        print()
+# One of these messages gets tacked onto those from the dictionary, unless it 
+# was a draw;
+win_msg = ", therefore you win!"
 
-    elif human == "scissors" and computer == "paper":
-        print("Scissors cut paper, therefore you win!")
-        print()
+lose_msg = ", therefore you lose!"
 
-    else:
-        print("Both you and the computer chose the same object, therefore it's a stalemate.")
-        print()
+################# DECIDING WHO WINS
 
-else:
-    print("This is an invalid input, please run the program again from the\n"
-            "beginning.")
+if human == computer:
+    print(f"You and the computer both chose {human}, therefore it is a draw!")
     print()
+
+# As stated above, if the combination of human and computer choices are in the 
+# dictionary, that means the human won;
+elif computer in win_combos[human]:
+    print(win_combos[human][computer]+win_msg)
+    print()
+
+# And if the combination of human and computer choices are NOT in the
+# dictionary, then that means the human lost; in this case, we would swap
+# the key and subkey to get the appropriate message (value);
+elif computer not in win_combos[human]:
+    print(win_combos[computer][human]+lose_msg)
+    print()
+
